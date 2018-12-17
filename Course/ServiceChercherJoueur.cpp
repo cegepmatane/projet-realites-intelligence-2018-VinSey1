@@ -7,6 +7,7 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
 #include "EnnemiIntelligence.h"
 #include "EnnemiPersonnage.h"
+#include "CourseCharacter.h"
 
 UServiceChercherJoueur::UServiceChercherJoueur()
 {
@@ -19,16 +20,10 @@ void UServiceChercherJoueur::TickNode(UBehaviorTreeComponent & OwnerComp, uint8 
 	AEnnemiIntelligence * intelligence = Cast<AEnnemiIntelligence>(OwnerComp.GetAIOwner());
 
 	if (intelligence) {
-		for (TActorIterator<AActor> iterateurActeur(GetWorld()); iterateurActeur; ++iterateurActeur)
+		ACourseCharacter * ennemi = Cast<ACourseCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		if (ennemi)
 		{
-			AActor * acteur = *iterateurActeur;
-			AEnnemiPersonnage * ennemi = Cast<AEnnemiPersonnage>(acteur);
-
-			if (ennemi)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, "Ennemi a son intelligence");
-				OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(intelligence->ennemiCle, ennemi);
-			}
+			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(intelligence->ennemiCle, ennemi);
 		}
 	}
 }
